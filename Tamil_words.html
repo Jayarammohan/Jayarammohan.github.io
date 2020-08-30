@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      li {
+          cursor: pointer;
+          background: lightblue;
+          border: thin outline black;
+          padding: 0.5rem;
+          padding-left: 1rem;
+          padding-right: 1rem;
+          margin: 1rem;
+      }
+      li.correct {
+          background: mediumspringgreen;
+      }
+      li.wrong {
+          background: indianred;
+      }
+      button {
+          padding: 0.5rem;
+          padding-left: 1rem;
+          padding-right: 1rem;
+          font-weight: bold;
+          cursor: pointer;
+      }
+      </style>
+  </head>
+<body>
+<style>
+p.serif {
+    font-family: "Times New Roman", Times, serif;
+}
+
+p.sansserif {
+    font-family: Arial, Helvetica, sans-serif;
+}
+div.row { clear: both; float: none; width: 1960px; overflow: hidden; padding: 0; white-space: nowrap; margin: auto; }
+div.u { float: left; text-align: center; width: 300px; padding: 1em 0; border-radius: 0.5em; }
+div.u:hover { background-color: #f0f0f0; }
+tt { color: #404040; text-transform: uppercase; white-space: nowrap; }
+div.u tt { display: block; }
+div.u span { font-size: 1.5em; color:red;height: 44px; display: block; font-family: arial, helvetica, sans-serif; }
+
+table.unicode { xfont-size: 9pt; border-collapse: collapse; margin: 10px; }
+table.unicode td { vertical-align: middle; padding: 1px 0; }
+table.unicode td.space { padding: 1px 60px; }
+
+div.utop form { padding-top: 12px; float: right; }
+div.utop h1 { padding: 6px 0p; }
+div.ubottom { border-top: 1px solid #e0e0e0; }
+div.ubottom form { padding-top: 7px; float: right; }
+</style>
+ 
+  
+<div class="row"> 
+ <div class="u"><span><p id = "random-letter"></p></span> </div>
+ 
+</div>
+ 
+<p>Click the button to display a random letter above.</p>
+ 
+<button onclick="myFunction()">Try it</button>
+
+<h2>Which came first?</h2>
+<ol>
+    <li id="A"></li>
+    <li id="B"></li>
+</ol>
+<button type="button" onClick="choose()">Next &rarr;</button>
+<p id="score"></p>
+
+
+
+<script>
+   
+  var a   = 0x0B85.toString(16);
+  var aa  = 0x0B86.toString(16);
+  var e   = 0x0B87.toString(16);
+  var ee  = 0x0B88.toString(16);
+  var vu  = 0x0B89.toString(16);
+  var voo = 0x0B8A.toString(16);
+  var eh  = 0x0B8E.toString(16);
+  var eah = 0x0B8F.toString(16);
+  var i   = 0x0B90.toString(16);
+  var o   =   0x0B92.toString(16);
+  var oo  =   0x0B93.toString(16);
+  var ow  =   0x0B94.toString(16);
+  var ik  =   0x0B83.toString(16);
+
+
+  var ka   = 0x0B95.toString(16);
+  var gna  = 0x0B99.toString(16);
+  var cha  = 0x0B9A.toString(16);
+  var ja   = 0x0B9C.toString(16);
+  var ngya = 0x0B9E.toString(16);
+  var ta   = 0x0B9F.toString(16);
+  var munu_chuli_na = 0x0BA3.toString(16);
+  var tha  = 0x0BA4.toString(16);
+  var na   = 0x0BA8.toString(16);
+  var pa   = 0x0BAA.toString(16);
+  var ma   = 0x0BAE.toString(16);
+  var ya   = 0x0BAF.toString(16);
+  var ra   = 0x0BB0.toString(16);
+  var la   = 0x0BB2.toString(16);
+  var va   = 0x0BB5.toString(16);
+  var zha  = 0x0BB4.toString(16);
+  var lla  = 0x0BB3.toString(16);
+  var rra  = 0x0BB1.toString(16);
+  var rendu_chuli_na = 0x0BA9.toString(16);
+
+
+  var AAA   = 0x0BBE.toString(16);
+  var kaA   =       ka   + '&#x' +  AAA ;
+  var gnaA  =       gna   +  '&#x'+ AAA ;
+  var chaA  =     cha    + '&#x' +AAA ;
+  var jaA   =    ja   +  '&#x' + AAA ; 
+  var ngyaA =     ngya    + '&#x' +AAA ;
+  var taA   =     ta     + '&#x' +AAA ;
+  var munu_chuli_naA =    munu_chuli_na   + '&#x' + AAA ; 
+  var thaA  =     tha   +  '&#x' + AAA ;
+  var naA   =     na   +   '&#x' +AAA ;
+  var paA   =    pa   +  '&#x' + AAA ;
+  var maA   =     ma   +   '&#x' +AAA ;
+  var yaA   =    ya   +  '&#x' + AAA ;
+  var raA   =     ra   +  '&#x' + AAA ;
+  var laA   =    la   +   '&#x' +AAA ;
+  var vaA   =     va  +   '&#x' +AAA ;
+  var zhaA  =     zha   +  '&#x' +AAA ;
+  var llaA  =     lla   +   '&#x' +AAA ;
+  var rraA  =     rra   +  '&#x' + AAA ;
+  var rendu_chuli_naA =   '&#x' +rendu_chuli_na  +  '&#x' + AAA ; 
+  
+  var YE   = 0x0BBF.toString(16);
+  var kE   =   ka   + '&#x' +  YE ;
+  var gnE  =    gna   + '&#x' + YE ;
+  var chE  =    cha   + '&#x' + YE ;
+  var jE   =   ja   + '&#x' + YE ; 
+  var ngyE =   ngya   + '&#x' + YE ;
+  var tE   =    ta  + '&#x' + YE ;
+  var munu_chuli_nE =   munu_chuli_na   + '&#x' + YE ; 
+  var thE  =    tha   + '&#x' + YE ;
+  var nE   =    na   + '&#x' + YE ;
+  var pE   =   pa   + '&#x' + YE ;
+  var mE   =    ma   + '&#x' + YE ;
+  var yE   =   ya   + '&#x' + YE ;
+  var rE   =    ra   + '&#x' + YE ;
+  var lE   =    la   + '&#x' + YE ;
+  var vE   =    va   + '&#x' + YE ;
+  var zhE  =   zha  + '&#x' + YE ;
+  var llE  =    lla   + '&#x' + YE ;
+  var rrE  =    rra   + '&#x' + YE ;
+  var rendu_chuli_nE =    rendu_chuli_na   + '&#x' + YE ; 
+
+  var YEE   = 0x0BC0.toString(16);
+  var kEE   =     ka  + '&#x' +  YEE ;
+  var gnEE  =      gna   + '&#x' + YEE ;
+  var chEE  =    cha   + '&#x' + YEE; 
+  var jEE   =   ja   + '&#x' + YEE;  
+  var ngyEE =   ngya   + '&#x' + YEE; 
+  var tEE   =    ta   + '&#x' + YEE; 
+  var munu_chuli_nEE =   munu_chuli_na   + '&#x' + YEE;  
+  var thEE  =    tha   + '&#x' + YEE; 
+  var nEE   =    na    + '&#x' + YEE; 
+  var pEE   =    pa   + '&#x' + YEE; 
+  var mEE   =    ma   + '&#x' + YEE; 
+  var yEE   =   ya   + '&#x' + YEE; 
+  var rEE   =   ra   + '&#x' + YEE; 
+  var lEE   =    la   + '&#x' + YEE; 
+  var vEE   =    va   + '&#x' + YEE; 
+  var zhEE  =    zha   + '&#x' + YEE; 
+  var llEE  =    lla  + '&#x' + YEE; 
+  var rrEE  =   rra   + '&#x' + YEE; 
+  var rendu_chuli_nEE =  rendu_chuli_na   + '&#x' + YEE;
+
+  var VU_KOKKI   = 0x0BC1.toString(16);
+  var kU   =   ka   + '&#x' +  VU_KOKKI ;
+  var gnU  =    gna   + '&#x' + VU_KOKKI ;
+  var chU  =    cha   + '&#x' + VU_KOKKI; 
+  var jU   =  ja   + '&#x' + VU_KOKKI;  
+  var ngyU =    ngya   + '&#x' + VU_KOKKI; 
+  var tU  =    ta  + '&#x' + VU_KOKKI; 
+  var munu_chuli_nU =  munu_chuli_na   + '&#x' + VU_KOKKI;  
+  var thU  =   tha   + '&#x' + VU_KOKKI; 
+  var nU   =   na   + '&#x' + VU_KOKKI; 
+  var pU   =    pa  + '&#x' + VU_KOKKI; 
+  var mU   =    ma   + '&#x' + VU_KOKKI; 
+  var yU   =   ya   + '&#x' + VU_KOKKI; 
+  var rU   =   ra   + '&#x' + VU_KOKKI; 
+  var lU   =    la   + '&#x' + VU_KOKKI; 
+  var vU   =    va  + '&#x' + VU_KOKKI; 
+  var zhU  =   zha   + '&#x' + VU_KOKKI; 
+  var llU  =    lla   + '&#x' + VU_KOKKI; 
+  var rrU  =   rra  + '&#x' + VU_KOKKI; 
+  var rendu_chuli_nU =  rendu_chuli_na   + '&#x' + VU_KOKKI;
+
+  var VOO_KOKKI   = 0x0BC2.toString(16);
+  var kOO   =   ka   + '&#x' +  VOO_KOKKI ;
+  var gnOO  =    gna   + '&#x' + VOO_KOKKI ;
+  var chOO  =    cha   + '&#x' + VOO_KOKKI; 
+  var jOO   =   ja   + '&#x' + VOO_KOKKI;  
+  var ngyOO =    ngya   + '&#x' + VOO_KOKKI; 
+  var tOO  =    ta  + '&#x' + VOO_KOKKI; 
+  var munu_chuli_nOO =   munu_chuli_na   + '&#x' + VOO_KOKKI;  
+  var thOO  =    tha   + '&#x' + VOO_KOKKI; 
+  var nOO   =    na   + '&#x' + VOO_KOKKI; 
+  var pOO   =    pa  + '&#x' + VOO_KOKKI; 
+  var mOO   =    ma   + '&#x' + VOO_KOKKI; 
+  var yOO   =    ya   + '&#x' + VOO_KOKKI; 
+  var rOO   =    ra   + '&#x' + VOO_KOKKI; 
+  var lOO   =   la   + '&#x' + VOO_KOKKI; 
+  var vOO   =   va  + '&#x' + VOO_KOKKI; 
+  var zhOO  =    zha   + '&#x' + VOO_KOKKI; 
+  var llOO  =    lla   + '&#x' + VOO_KOKKI; 
+  var rrOO  =    rra  + '&#x' + VOO_KOKKI; 
+  var rendu_chuli_nOO =  rendu_chuli_na   + '&#x' + VOO_KOKKI;
+
+  var EH_KOKKI   = 0x0BC6.toString(16);
+  var kEH =   ka   + '&#x' +  EH_KOKKI ;var gnEH  =   gna   + '&#x' + EH_KOKKI ;var chEH  =   cha + '&#x' +EH_KOKKI; var jEH   =ja +'&#x' +EH_KOKKI;
+  var ngyEH =    ngya   + '&#x' + EH_KOKKI; var tEH  =    ta  + '&#x' + EH_KOKKI; var munu_chuli_nEH =  munu_chuli_na   + '&#x' + EH_KOKKI;  
+  var thEH  =    tha   + '&#x' + EH_KOKKI; var nEH   =   na   + '&#x' + EH_KOKKI;   var pEH   =    pa  + '&#x' + EH_KOKKI; 
+  var mEH   =    ma   + '&#x' + EH_KOKKI; var yEH   =    ya   + '&#x' + EH_KOKKI; var rEH   =    ra   + '&#x' + EH_KOKKI; 
+  var lEH   =    la   + '&#x' + EH_KOKKI; var vEH   =    va  + '&#x' + EH_KOKKI; var zhEH  =   zha   + '&#x' + EH_KOKKI; 
+  var llEH  =    lla   + '&#x' + EH_KOKKI; var rrEH  =    rra  + '&#x' + EH_KOKKI; var rendu_chuli_nEH =   rendu_chuli_na   + '&#x' + EH_KOKKI;
+
+  var EAH_KOKKI   = 0x0BC7.toString(16);
+  var kEAH =    ka   + '&#x' + EAH_KOKKI ;var gnEAH =   gna   + '&#x' + EAH_KOKKI ;var chEAH =   cha + '&#x' +EAH_KOKKI; var jEAH =   ja +'&#x' +EAH_KOKKI;
+  var ngyEAH =    ngya   + '&#x' + EAH_KOKKI; var tEAH=  ta  + '&#x' + EAH_KOKKI; var munu_chuli_nEAH =   munu_chuli_na   + '&#x' + EAH_KOKKI;  
+  var thEAH  =    tha   + '&#x' + EAH_KOKKI; var nEAH   =    na   + '&#x' + EAH_KOKKI;   var pEAH   =   pa  + '&#x' + EAH_KOKKI; 
+  var mEAH   =    ma   + '&#x' + EAH_KOKKI; var yEAH   =   ya   + '&#x' + EAH_KOKKI; var rEAH   =    ra   + '&#x' + EAH_KOKKI; 
+  var lEAH   =   la   + '&#x' + EAH_KOKKI; var vEAH   =    va  + '&#x' + EAH_KOKKI; var zhEAH  =    zha   + '&#x' + EAH_KOKKI; 
+  var llEAH  =   lla   + '&#x' + EAH_KOKKI; var rrEAH  =    rra  + '&#x' + EAH_KOKKI; var rendu_chuli_nEAH =   rendu_chuli_na   + '&#x' + EAH_KOKKI;
+
+  var I_KOKKI   = 0x0BC8.toString(16);
+  var kI =   ka   + '&#x' + I_KOKKI ;var gnI =   gna   + '&#x' + I_KOKKI ;var chI =  cha + '&#x' +I_KOKKI; var jI =   ja +'&#x' +I_KOKKI;
+  var ngyI =    ngya   + '&#x' + I_KOKKI; var tI=  ta  + '&#x' + I_KOKKI; var munu_chuli_nI =  munu_chuli_na   + '&#x' + I_KOKKI;  
+  var thI  =    tha   + '&#x' + I_KOKKI; var nI   =    na   + '&#x' + I_KOKKI;   var pI   =    pa  + '&#x' + I_KOKKI; 
+  var mI   =    ma   + '&#x' + I_KOKKI; var yI   =    ya   + '&#x' + I_KOKKI; var rI   =    ra   + '&#x' + I_KOKKI; 
+  var lI   =    la   + '&#x' + I_KOKKI; var vI  =   va  + '&#x' + I_KOKKI; var zhI  =   zha   + '&#x' + I_KOKKI; 
+  var llI  =    lla   + '&#x' + I_KOKKI; var rrI  =    rra  + '&#x' + I_KOKKI; var rendu_chuli_nI =   rendu_chuli_na   + '&#x' + I_KOKKI;
+
+  var O_KOKKI   = 0x0BCA.toString(16);
+  var kO =  ka   + '&#x' + O_KOKKI ;var gnO = '&#x' + gna   + '&#x' + O_KOKKI ;var chO =   cha + '&#x' +O_KOKKI; var jO = '&#x' + ja +'&#x' +O_KOKKI;
+  var ngyO =    ngya   + '&#x' + O_KOKKI; var tO=  ta  + '&#x' + O_KOKKI; var munu_chuli_nO =  munu_chuli_na   + '&#x' + O_KOKKI;  
+  var thO  =    tha   + '&#x' + O_KOKKI; var nO   =    na   + '&#x' + O_KOKKI;   var pO   =   pa  + '&#x' + O_KOKKI; 
+  var mO   =    ma   + '&#x' + O_KOKKI; var yO   =    ya   + '&#x' + O_KOKKI; var rO   =    ra   + '&#x' + O_KOKKI; 
+  var lO   =    la   + '&#x' + O_KOKKI; var vO   =    va  + '&#x' + O_KOKKI; var zhO  =   zha   + '&#x' + O_KOKKI; 
+  var llO =    lla   + '&#x' + O_KOKKI; var rrO  =   rra  + '&#x' + O_KOKKI; var rendu_chuli_nO =  rendu_chuli_na   + '&#x' + O_KOKKI;
+
+  var OOH_KOKKI   = 0x0BCB.toString(16);
+  var kOOH =   ka   + '&#x' + OOH_KOKKI ;var gnOOH =  gna   + '&#x' + OOH_KOKKI ;var chOOH =   cha + '&#x' +OOH_KOKKI; var jOOH =   ja +'&#x' +OOH_KOKKI;
+  var ngyOOH =    ngya   + '&#x' + OOH_KOKKI; var tOOH=  ta  + '&#x' + OOH_KOKKI; var munu_chuli_nOOH =   munu_chuli_na   + '&#x' + OOH_KOKKI;  
+  var thOOH  =   tha   + '&#x' + OOH_KOKKI; var nOOH   =    na   + '&#x' + OOH_KOKKI;   var pOOH   =    pa  + '&#x' + OOH_KOKKI; 
+  var mOOH   =    ma   + '&#x' + OOH_KOKKI; var yOOH   =    ya   + '&#x' + OOH_KOKKI; var rOOH   =    ra   + '&#x' + OOH_KOKKI; 
+  var lOOH   =    la   + '&#x' + OOH_KOKKI; var vOOH   =    va  + '&#x' + OOH_KOKKI; var zhOOH  =    zha   + '&#x' + OOH_KOKKI; 
+  var llOOH =    lla   + '&#x' + OOH_KOKKI; var rrOOH  =   rra  + '&#x' + OOH_KOKKI; var rendu_chuli_nOOH =   rendu_chuli_na   + '&#x' + OOH_KOKKI;
+
+    var OW_KOKKI   = 0x0BCC.toString(16);
+  var kOW =  ka   + '&#x' + OW_KOKKI ;var gnOW =   gna   + '&#x' + OW_KOKKI ;var chOW =   cha + '&#x' +OW_KOKKI; var jOW =   ja +'&#x' +OW_KOKKI;
+  var ngyOW =    ngya   + '&#x' + OW_KOKKI; var tOW=  ta  + '&#x' + OW_KOKKI; var munu_chuli_nOW =   munu_chuli_na   + '&#x' + OW_KOKKI;  
+  var thOW  =   tha   + '&#x' + OW_KOKKI; var nOW   =    na   + '&#x' + OW_KOKKI;   var pOW   =    pa  + '&#x' + OW_KOKKI; 
+  var mOW   =    ma   + '&#x' + OW_KOKKI; var yOW   =    ya   + '&#x' + OW_KOKKI; var rOW   =    ra   + '&#x' + OW_KOKKI; 
+  var lOW   =    la   + '&#x' + OW_KOKKI; var vOW   =    va  + '&#x' + OW_KOKKI; var zhOW  =    zha   + '&#x' + OW_KOKKI; 
+  var llOW =    lla   + '&#x' + OW_KOKKI; var rrOW  =    rra  + '&#x' + OW_KOKKI; var rendu_chuli_nOW =   rendu_chuli_na   + '&#x' + OW_KOKKI;
+
+  var IK_KOKKI   = 0x0BCD.toString(16);
+  var kIk =   ka   + '&#x' + IK_KOKKI ;var gnIk = '&#x' + gna   + '&#x' + IK_KOKKI ;var chIk =   cha + '&#x' +IK_KOKKI; var jIk =  ja +'&#x' +IK_KOKKI;
+  var ngyIk =    ngya   + '&#x' + IK_KOKKI; var tIk=  ta  + '&#x' + IK_KOKKI; var munu_chuli_nIk =   munu_chuli_na   + '&#x' + IK_KOKKI;  
+  var thIk  =    tha   + '&#x' + IK_KOKKI; var nIk   =    na   + '&#x' + IK_KOKKI;   var pIk   =    pa  + '&#x' + IK_KOKKI; 
+  var mIk   =    ma   + '&#x' + IK_KOKKI; var yIk   =    ya   + '&#x' + IK_KOKKI; var rIk   =   ra   + '&#x' + IK_KOKKI; 
+  var lIk   =   la   + '&#x' + IK_KOKKI; var vIk  =    va  + '&#x' + IK_KOKKI; var zhIk  =   zha   + '&#x' + IK_KOKKI; 
+  var llIk  =   lla   + '&#x' + IK_KOKKI; var rrIk  =   rra  + '&#x' + IK_KOKKI; var rendu_chuli_nIk =   rendu_chuli_na   + '&#x' + IK_KOKKI;
+    
+  //Sanskrit characters
+  var ja  =   0x0B9c.toString(16);
+  var sha =   0x0BB7.toString(16);
+  var sa  =   0x0BB8.toString(16);
+  var ha  =   0x0BB9.toString(16);
+ var someTamilCharacters = [a ,aa,e,ee,vu,voo,eh,eah,i,o,oo,ow,ik,
+  ka ,gna  ,cha,   ngya,  ta   , munu_chuli_na,tha,na ,pa,ma,ya,ra,la,va,zha ,lla,rra  ,rendu_chuli_na,
+  kaA ,gnaA  ,chaA,   ngyaA,  taA   , munu_chuli_naA,thaA,naA ,paA,maA,yaA,raA,laA,vaA,zhaA,llaA,rraA  ,rendu_chuli_naA,
+  kE ,gnE  ,chE ,  ngyE,  tE   , munu_chuli_nE,thE,nE ,pE,mE,yE,rE,lE,vE,zhE ,llE,rrE  ,rendu_chuli_nE,
+  kEE ,gnEE  ,chEE,   ngyEE,  tEE   , munu_chuli_nEE,thEE,nEE ,pEE,mEE,yEE,rEE,lEE,vEE,zhEE ,llEE,rrEE  ,rendu_chuli_nEE,
+  kU ,gnU  ,chU,   ngyU,  tU   , munu_chuli_nU,thU,nU ,pU,mU,yU,rU,lU,vU,zhU ,llU,rrU  ,rendu_chuli_nU,
+  kOO ,gnOO  ,chOO,   ngyOO,  tOO   , munu_chuli_nOO,thOO,nOO ,pOO,mOO,yOO,rOO,lOO,vOO,zhOO ,llOO,rrOO  ,rendu_chuli_nOO,
+  kEH ,gnEH  ,chEH,   ngyEH,  tEH   , munu_chuli_nEH,tEH,nEH ,pEH,mEH,yEH,rEH,lEH,vEH,zhEH ,llEH,rrEH  ,rendu_chuli_nEH,
+  kEAH ,gnEAH  ,chEAH,   ngyEAH,  tEAH   , munu_chuli_nEAH,tEAH,nEAH ,pEAH,mEAH,yEAH,rEAH,lEAH,vEAH,zhEAH ,llEAH,rrEAH  ,rendu_chuli_nEAH,
+  kI ,gnI  ,chI,   ngyI,  tI   , munu_chuli_nI,thI,nI ,pI,mI,yI,rI,lI,vI,zhI ,llI,rrI  ,rendu_chuli_nI,
+  kO ,gnO  ,chO,   ngyO,  tO   , munu_chuli_nO,thO,nO ,pO,mO,yO,rO,lO,vO,zhO ,llO,rrO  ,rendu_chuli_nO,
+  kOOH ,gnOOH  ,chOOH,   ngyOOH,  tOOH   , munu_chuli_nOOH,thOOH,nOOH ,pOOH,mOOH,yOOH,rOOH,lOOH,vOOH,zhOOH ,llOOH,rrOOH ,rendu_chuli_nOOH,
+  kOW ,gnOW  ,chOW,   ngyOW,  tOW   , munu_chuli_nOW,thOW,nOW ,pOW,mOW,yOW,rOW,lOW,vOW,zhOW ,llOW,rrOW  ,rendu_chuli_nOW,
+  kIk ,gnIk  ,chIk,   ngyIk,  tIk   , munu_chuli_nIk,thIk,nIk ,pIk,mIk,yIk,rIk,lIk,vIk,zhIk ,llIk,rrIk  ,rendu_chuli_nIk,ja,sha,sa,ha];
+
+  var inventions = [a + '&#x' + mIk +'&#x'+ maA,
+                    a + '&#x' +pIk + '&#x' +paA,
+                    a + '&#x' +munu_chuli_nIk + '&#x' +munu_chuli_naA];
+  //                  tha + '&#x' +mIk + '&#x' +pE,
+    //                yaA + '&#x' + rendu_chuli_nI];
+
+   
+const A = document.getElementById('A');
+const B = document.getElementById('B');
+
+    function random() {
+      var randomCharacter = inventions[Math.floor(Math.random() * inventions.length)];
+  
+      document.getElementById('random-letter').innerHTML =   '&#x' +randomCharacter.toString(16) + ';';
+    }
+
+    function choose() {
+      random();
+        A.classList.remove('wrong');
+        A.classList.remove('correct');
+        B.classList.remove('wrong');
+        B.classList.remove('correct');
+         A.innerHTML = '&#x' +inventions[0].toString(16);
+        A.setAttribute('data-index', 0);
+        B.innerHTML = '&#x' +inventions[1].toString(16);
+        B.setAttribute('data-index', 1);
+    }
+
+A.addEventListener('click', solve);
+B.addEventListener('click', solve);
+
+let score = 0;
+let total = 0;
+
+function solve(event) {
+    if (A.classList.contains("correct") || A.classList.contains("wrong")) return;
+    if (B.classList.contains("correct") || B.classList.contains("wrong")) return;
+    total++;
+    const i = parseInt(A.getAttribute('data-index'));
+    const j = parseInt(B.getAttribute('data-index'));
+    A.innerHTML += ` (${inventions[i]})`;
+    B.innerHTML += ` (${inventions[j]})`;
+    let correct = (i <= j && event.currentTarget == A) || (i >= j && event.currentTarget == B);
+    if (inventions[i] == inventions[j]) {
+        correct = true;
+    }
+    if (correct) {
+        score++;
+        event.currentTarget.classList.add('correct');
+    } else {
+        event.currentTarget.classList.add('wrong');
+    }
+    document.getElementById('score').innerHTML = `Score: ${score}/${total}`;
+}
+
+choose();
+</script>
+</body>
+</html>
