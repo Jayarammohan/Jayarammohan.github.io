@@ -1,0 +1,292 @@
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.5.3/math.min.js"></script>
+<head>
+</head>
+<body>
+  <h3>Simple Calculator</h3>
+  <br/>
+  <form Name="calc">
+   <div ng-app="myApp" ng-controller="myCtrl">
+
+    <table border=2>
+      <tr>
+        <td colspan=4><input type=text ng-model="output"></td>
+      </tr>
+      {{output}}  
+      <tr>
+        <td><input type=button value="RAD" ng-click='radian()'></td>
+        <td><input type=button value="..." ng-click='degrees()'></td>
+        <td><input type=button value="x!" ng-click='factorial()'></td>
+        <td><input type=button value="(" ng-click='openbracket()'></td>
+        <td><input type=button value=")" ng-click='closebracket()'></td>
+        <td><input type=button value="%" ng-click="calc.display.value = calc.display.value * 0.01"></td>
+        <td><input type=button value="CE" ng-click='clear()'></td>
+
+      </tr>
+      <tr>
+        <td><input type=button value="inv" ng-click="calc.display.value+='3'"></td>
+        <td><input type=button value="sin" ng-click='trigfunc("sin(")'></td>
+        <td><input type=button value="ln" ng-click="calc.display.value+='5'"></td>
+        <td><input type=button value="7" ng-click='updateOutput(7)'></td>
+        <td><input type=button value="8" ng-click='updateOutput(8)'></td>
+        <td><input type=button value="9" ng-click='updateOutput(9)'></td>
+        <td><input type=button value="&#x00F7" ng-click='updateOutput("/")'></td>
+
+      </tr>
+      <tr>
+        <td><input type=button value="&#x03C0" ng-click='pi()'></td>
+        <td><input type=button value="cos" ng-click='trigfunc("cos(")'></td>
+        <td><input type=button value="log" ng-click='logfunc()'></td>
+        <td><input type=button value="4" ng-click='updateOutput(4)'></td>
+        <td><input type=button value="5" ng-click='updateOutput(5)'></td>
+        <td><input type=button value="6" ng-click='updateOutput(6)'></td>
+        <td><input type=button value="&#x00D7" ng-click='updateOutput("*")'></td>
+
+      </tr>
+      <tr>
+        <td><input type=button value="e" ng-click='e()'></td>
+        <td><input type=button value="tan" ng-click = 'trigfunc("tan(")'></td>
+        <td><input type=button value="&#x221A" ng-click='squareroot()'></td>
+        <td><input type=button value="1" ng-click='updateOutput(1)'></td>
+        <td><input type=button value="2" ng-click='updateOutput(2)'></td>
+        <td><input type=button value="3" ng-click='updateOutput(3)'></td>
+        <td><input type=button value="-" ng-click='updateOutput("-"")'></td>
+
+      </tr>
+    </tr>
+    <tr>
+      <td><input type=button value="ANS" ng-click="calc.display.value+='9'"></td>
+      <td><input type=button value="Exp" ng-click="calc.display.value=eval(calc.display.value)"></td>
+      <td><input type=button value="X&#x207F" ng-click='updateOutput("**")'></td>
+      <td><input type=button value="0" ng-click='updateOutput(0)'></td>
+      <td><input type=button value="." ng-click='updateOutput(".")'></td>
+      <td><input type=button value="=" ng-click='evaluate("x")'></td>
+      <td><input type=button value="+" ng-click='updateOutput("+")'></td>
+
+    </tr>
+  </table>
+    <script>
+
+      var app = angular.module('myApp', []);
+      app.controller('myCtrl', function($scope) {
+        // Bound to the output display
+        $scope.output = "0";
+        // Used to   whether to start a new number
+        // in the display and when to concatenate
+        $scope.newNumber = true;
+  
+        // Holds the pending operation so calculate knows
+        // what to do
+        $scope.pendingOperation = null;
+  
+        // Bound to the view to display a token indicating
+        // the current operation
+        $scope.operationToken = "";
+  
+        // Holds the running total as numbers are added/subtracted
+        $scope.runningTotal = null;
+  
+        // Holds the number value of the string in the display output
+        $scope.pendingValue = null;
+  
+        // Tells calculate what to do when the equals buttons is clicked repeatedly
+        $scope.lastOperation = null;
+        //trignometic function occurrence
+        $scope.trig = false;
+        $scope.logfn  = false;
+        $scope.sqrt  = false;
+        $scope.trigStart = 0;
+        $scope.logStart  = 0;
+        $scope.sqrtStart = 0;
+
+        /*
+        * Runs every time a number button is clicked.
+        * Updates the output display and sets 
+        * newNumber flag
+        */
+        $scope.updateOutput = function(btn) {
+          if($scope.output == "0" || $scope.newNumber) {
+            $scope.output = btn;
+            $scope.newNumber = false;
+          }  
+          else {
+            $scope.output += String(btn);
+          }
+          $scope.pendingValue = toNumber($scope.output);
+        };
+
+        $scope.evaluate = function(btn) {
+          while($scope.output.indexOf("sin") >= 0  ) {
+            evaluateTrig("sin");
+          }
+          while($scope.output.indexOf("cos") >= 0  ) {
+            evaluateTrig("cos");
+          }
+          while($scope.output.indexOf("tan") >= 0  ) {
+            evaluateTrig("tan");
+          }
+          while($scope.output.indexOf("sqrt") >= 0  ) {
+            evaluateSqrt();
+          }
+
+          while($scope.output.indexOf("log") >= 0  ) {
+            evaluateLog();
+          }
+
+          try {
+            $scope.output = "" + eval($scope.output);
+          }
+          catch(err) {
+            $scope.output = err.message;
+          }
+        };
+
+        evaluateTrig = function(btn) {
+ 
+          var prefixEnd = $scope.output.indexOf(btn);
+          var prefix = $scope.output.slice(0,prefixEnd);
+          var suffixStart = $scope.output.substring(prefixEnd).indexOf(")")  + prefixEnd;
+          var suffix = $scope.output.slice(suffixStart+1);
+          var full = prefix + suffix;
+          var value = $scope.output.substring(prefixEnd + 4, suffixStart  );
+          if(btn == "sin")
+            $scope.output = prefix + Math.sin(value);
+          else if(btn == "cos")
+            $scope.output = prefix + Math.cos(value);
+          else if (btn == "tan")
+            $scope.output = prefix + Math.tan(value);
+        };
+
+        evaluateSqrt = function() {
+          var prefixEnd = $scope.output.indexOf('sqrt(');
+          var prefix = $scope.output.slice(0,prefixEnd);
+          var suffixStart = $scope.output.substring(prefixEnd).indexOf(")")  + prefixEnd;
+          var suffix = $scope.output.slice(suffixStart+1);
+          var full = prefix + suffix;
+          var value = $scope.output.substring(prefixEnd + 5, suffixStart  );
+          $scope.output = prefix + Math.sqrt(value);
+         }; 
+
+        evaluateLog = function() {
+          var prefixEnd = $scope.output.indexOf('log(');
+          var prefix = $scope.output.slice(0,prefixEnd);
+          var suffixStart = $scope.output.substring(prefixEnd).indexOf(")")  + prefixEnd;
+          var suffix = $scope.output.slice(suffixStart+1);
+          var full = prefix + suffix;
+          var value = $scope.output.substring(prefixEnd + 4, suffixStart  );
+          $scope.output = prefix + Math.log10(value);
+        };
+
+        $scope.factorial = function() {
+          number = $scope.output;
+          factorial = 1;
+          for(i=1; i <= number; i++)
+            factorial = factorial * i;
+          $scope.output = "" + factorial;
+         };
+
+        $scope.clear = function() {
+          try {
+            $scope.output = $scope.output.slice(0,-1);
+          }
+          catch(err) {
+            alert(err.message);
+          }
+        };
+
+        $scope.squareroot = function() {
+          $scope.sqrtStart = $scope.output.length;
+          $scope.sqrt = true;
+          if($scope.output == "0" || $scope.newNumber) {
+            $scope.output = "sqrt(";
+            $scope.newNumber = false;
+          } else {
+              $scope.output += "sqrt(";
+          }   
+        };
+
+        $scope.trigfunc = function(btn) {
+           $scope.trigStart = $scope.output.length;
+           $scope.trig = true;
+           if($scope.output == "0" || $scope.newNumber) {
+              $scope.newNumber = false;
+              $scope.output = btn;
+
+           } 
+           else
+              $scope.output += btn;
+       };
+
+
+       $scope.logfunc = function() {    
+            $scope.logStart = $scope.output.length;
+            $scope.logfn = true;
+            
+            if($scope.output == "0" || $scope.newNumber) {
+              $scope.newNumber = false;
+              $scope.output = "log(";
+            }
+            else  
+              $scope.output += "log(";
+       } ;  
+
+       $scope.pi = function() {
+            if($scope.output == "0" || $scope.newNumber) {
+              $scope.newNumber = false;
+              $scope.output = Math.PI;
+            }
+            else 
+              $scope.output += Math.PI;
+       } ;
+
+       $scope.e = function() {
+          if($scope.output == "0" || $scope.newNumber) {
+            $scope.newNumber = false;
+            $scope.output = Math.E;
+          }
+          else 
+            $scope.output += Math.E;
+       } ;
+       
+       $scope.openbracket = function() {
+          $scope.output += '(';
+       };
+
+       $scope.closebracket = function() {
+ 
+        if($scope.output == "0" || $scope.newNumber) {
+           
+        } 
+        else if($scope.trig) {
+        //go back upto the most recent open bracket, evaluate and substitute since eval caters only for normal arith expression
+       
+          var suffix = $scope.output.slice($scope.trigStart+4);
+          var pre = $scope.output.slice(0,$scope.trigStart+4);
+          $scope.output = (pre.concat (eval(suffix))).concat(")");
+         //alert("subst is" +subst);
+          $scope.trig = false;
+        } 
+        else if($scope.sqrt) {
+        //go back upto the most recent open bracket, evaluate and substitute since eval caters only for normal arith expression        
+          var suffix = $scope.output.slice($scope.sqrtStart+4);
+          var pre = $scope.output.slice(0,$scope.sqrtStart+4);
+          $scope.output = (pre.concat (eval(suffix))).concat(")");
+          $scope.sqrt = false;
+        } 
+
+        else { 
+         
+         $scope.output += ")";
+        }	
+       } 
+       
+  });
+
+ 
+</script>
+</form>
+</div>
+</body>
+</html>
+ 
