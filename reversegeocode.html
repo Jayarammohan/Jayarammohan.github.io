@@ -70,6 +70,7 @@
           });
       }
       function placeMarkerAndPanTo(latLng, map) {
+        
         var marker = new google.maps.Marker({
           position: latLng,
           map: map
@@ -78,7 +79,7 @@
         map.setCenter(latLng);
       }
 
-      function geocodeLatLng1(geocoder, map, infowindow,latlng) {
+      function geocodeLatLng(geocoder, map, infowindow,latlng) {
        geocoder.geocode({'location': latlng}, function(results, status) {
         if (status === 'OK') {
            if (results[0]) {
@@ -100,7 +101,7 @@
      
     </script>
     <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHZQ155s-GWybo-oHkVDcTkfq93SnVsxk&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCn5sKOeAoFUMvzoxQ5vCdYkchcurV39eg&callback=initMap">
     </script>
   </body>
 </html>

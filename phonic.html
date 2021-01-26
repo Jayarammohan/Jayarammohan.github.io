@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPA tester</title>
+<style>
+h1, h3, form, section {
+    text-align: center;
+}
+.correct {
+    font-weight: bold;
+    color: darkgreen;
+}
+.wrong {
+    font-weight: bold;
+    color: darkred;
+}
+.spell {
+    background: navy;
+    color: white;
+    border: thin solid black;
+    padding: 0.5rem;
+    margin: 0.5rem;
+}
+.spell:disabled {
+    background: gray;
+}
+
+input {
+    padding: 0.5rem;
+}
+</style>
+</head>
+<body>
+<main id="main"></main>
+<script type="module">
+  import { h, Component, render, createRef } from 'https://unpkg.com/preact@10.4.7?module';
+  import htm from 'https://unpkg.com/htm@3.0.4?module';
+  const html = htm.bind(h);
+
+  class Answer extends Component {
+    render() {
+      const { visible, word, correct } = this.props;
+      if (!visible) return null;
+      if (correct) {
+        return html`<p>✅</p>`;
+      }
+      return html`<p>The correct answers are: <span class="wrong">${word.answers.join(', ')}</span></p>`;
+    }
+  }
+
+  function Permalink(props) {
+    const { choice } = props;
+    const { protocol, host, pathname } = window.location;
+    const url = `${protocol}//${host}${pathname}#${choice}`;
+    return html`<p><span>Link to this word for your meɪts: </span><a href=${url}>${url}</a></p>`;
+  }
+
+  class WordGuesser extends Component {
+    constructor() {
+      super();
+      this.input = createRef();
+      this.state = { numCorrect: 0, total: 0 };
+    }
+    componentWillMount() {
+      this.next();
+    }
+    next() {
+      const { words } = this.props;
+      let choice = Math.floor(Math.random()*words.length);
+      if (location.hash.slice(1)) {
+        choice = parseInt(location.hash.slice(1));
+        location.hash = '';
+      }
+      this.setState({ choice, guessed: false, correct: false });
+      const { current } = this.input;
+      if (current) {
+        current.value = '';
+        current.focus();
+      }
+    }
+    guess(event) {
+      event.preventDefault();
+      const attempt = this.input.current.value.toLowerCase();
+      if (!attempt) return;
+      const { words } = this.props;
+      const { choice, guessed } = this.state;
+      let { numCorrect, total } = this.state;
+      if (guessed) return; // no point giving extra points if they've already guessed this round
+      const chosen = words[choice];
+      const correct = chosen.answers.filter(a => a == attempt).length;
+      total++
+      if (correct) numCorrect++;
+      this.setState({ guessed: true, correct, numCorrect, total });
+    }
+    render() {
+      const { words } = this.props;
+      const { choice, guessed, correct, numCorrect, total } = this.state;
+      const chosen = words[choice];
+      return html`
+        <section>
+          <h3>/${chosen.question}/</h3>
+          <form onSubmit=${() => this.guess(event)}>
+            <input type="text" autocomplete="off" ref=${this.input}/>
+            <button type="submit" class="spell" disabled=${guessed && "disabled"}>Spell it</button>
+          </form>
+          <p class="score">Score: ${numCorrect}/${total}</p>
+          <${Answer} word=${chosen} correct=${correct} visible=${guessed} />
+          ${guessed && html`
+            <button type="button" onClick=${() => this.next()}>Next</button>
+            <${Permalink} choice=${choice} />
+          `}
+        </section>
+      `;
+    }
+  }
+
+  class App extends Component {
+    componentDidMount() {
+      fetch('ipa1000.txt').then(res => res.text())
+        .then(txt => {
+          const words = txt.split('\n').filter(l => l).map(line => {
+            const parts = line.split('\t');
+            const question = parts[0];
+            const answers = parts[1].toLowerCase().split(',');
+            return { question, answers };
+          })
+          this.setState({ words });
+        })
+    }
+    render() {
+      const { words } = this.state;
+      return html`<article><h1>Spell this word, meɪt</h1>${
+        words ? html`<${WordGuesser} words=${words} />` : html`<h3>Loading...</h3>`
+      }</article>`;
+    }
+  }
+
+  render(html`<${App} name="World" />`, document.getElementById('main'));
+</script>
+</body>
+</html>
