@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventions</title>
+  <style>
+  </style>
+</head>
+<style type="text/css">
+  li {
+    cursor: pointer;
+    background: lightblue;
+    border: thin outline black;
+    padding: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin: 1rem;
+  }
+
+  li.correct {
+    background: mediumspringgreen;
+  }
+
+  li.wrong {
+    background: indianred;
+  }
+
+  button {
+    padding: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
+</style>
+</head>
+
+<body>
+  <main id="main"></main>
+  <script type="module">
+    import { h, Component, render, createRef } from 'https://unpkg.com/preact@10.4.7?module';
+    import htm from 'https://unpkg.com/htm@3.0.4?module';
+    const html = htm.bind(h);
+    let total = 0;
+    let score = 0;
+
+    function solve(event, chosen1, chosen2) {
+      if (event == null) return;
+      const a = document.getElementById('invention-a');
+      const b = document.getElementById('invention-b');
+
+      if (a.classList.contains("correct") || a.classList.contains("wrong")) return;
+      if (b.classList.contains("correct") || b.classList.contains("wrong")) return;
+      total++;
+      const i = parseInt(a.getAttribute('data-index'));
+      const j = parseInt(b.getAttribute('data-index'));
+
+      const time1 = a.getAttribute('timeperiod');
+      const time2 = b.getAttribute('timeperiod');
+
+      a.innerHTML += " -> " + time1;
+      b.innerHTML += " -> " + time2;
+      let correct = (i <= j && event.currentTarget == a) || (i >= j && event.currentTarget == b);
+      if (time1 == time2) {
+        correct = true;
+      }
+      if (correct) {
+        score++;
+        event.currentTarget.classList.add('correct');
+      } else {
+        event.currentTarget.classList.add('wrong');
+      }
+      document.getElementById('score').innerHTML = `Score: ${score}/${total}`;
+    }
+
+    function choose(chosen1, chosen2) {
+      a.classList.remove('wrong');
+      a.classList.remove('correct');
+      b.classList.remove('wrong');
+      b.classList.remove('correct');
+      const i = Math.floor(Math.random() * inventions.length);
+      let j = Math.floor(Math.random() * inventions.length);
+      while (j == i) {
+        j = Math.floor(Math.random() * inventions.length);
+      }
+      a.innerHTML = inventions[i][1];
+      a.setAttribute('data-index', i);
+      b.innerHTML = inventions[j][1];
+      b.setAttribute('data-index', j);
+    }
+
+    class Answer extends Component {
+      render() {
+        const { visible, word, correct } = this.props;
+        if (!visible) return null;
+        if (correct) {
+          return html`<p>✅</p>`;
+        }
+        return html`<p>The correct answers are: <span class="wrong">${word.answers.join(', ')}</span></p>`;
+      }
+    }
+
+    class WordGuesser extends Component {
+      constructor() {
+        super();
+        this.input = createRef();
+        this.state = { numCorrect: 0, total: 0 };
+      }
+      componentWillMount() {
+        this.next();
+      }
+      next() {
+        const { words } = this.props;
+        let choice1 = Math.floor(Math.random() * words.length);
+        let word = words[0];
+        let choice2 = Math.floor(Math.random() * words.length);
+        if (location.hash.slice(1)) {
+          choice1 = parseInt(location.hash.slice(1));
+          location.hash = '';
+        }
+        if (location.hash.slice(1)) {
+          choice2 = parseInt(location.hash.slice(1));
+          location.hash = '';
+        }
+        this.setState({ choice1, choice2, guessed: false, correct: false });
+        const { current } = this.input;
+        if (current) {
+          current.value = '';
+          current.focus();
+        }
+      }
+      guess(event) {
+        event.preventDefault();
+        const attempt = this.input.current.value.toLowerCase();
+        if (!attempt) return;
+        const { words } = this.props;
+        const { choice1, choice2, guessed } = this.state;
+        let { numCorrect, total } = this.state;
+        if (guessed) return; // no point giving extra points if they've already guessed this round
+        const chosen1 = words[choice1];
+        const chosen2 = words[choice2];
+        const correct = chosen1.answers.filter(a => a == attempt).length;
+        total++
+        if (correct) numCorrect++;
+        this.setState({ guessed: true, correct, numCorrect, total });
+      }
+      render() {
+        const { words } = this.props;
+        const { choice1, choice2, guessed, correct, numCorrect, total } = this.state;
+        const chosen1 = words[choice1];
+        const chosen2 = words[choice2];
+        document.getElementById('invention-a').innerHTML = chosen1.invention;
+        document.getElementById('invention-b').innerHTML = chosen2.invention;
+
+        document.getElementById('invention-a').addEventListener('click', solve, chosen1, chosen2);
+        document.getElementById('invention-b').addEventListener('click', solve, chosen1, chosen2);
+
+        const a = document.getElementById('invention-a');
+        const b = document.getElementById('invention-b');
+
+
+        a.classList.remove('wrong');
+        a.classList.remove('correct');
+        b.classList.remove('wrong');
+        b.classList.remove('correct');
+        a.setAttribute('data-index', choice1);
+        b.setAttribute('data-index', choice2);
+        a.setAttribute('timeperiod', chosen1.timeperiod);
+        b.setAttribute('timeperiod', chosen2.timeperiod);
+
+        return html`
+        <section>
+            <p id="score"></p>
+           ${html`
+            <button type="button" onClick=${() => this.next()}>Next</button>
+           `}
+        </section>
+      `;
+      }
+    }
+
+    class App extends Component {
+      componentDidMount() {
+        fetch('inventions.txt').then(res => res.text())
+          .then(txt => {
+            const words = txt.split('\n').filter(l => l).map(line => {
+              const parts = line.split(',');
+              const timeperiod = parts[0];
+              const invention = parts[1].toLowerCase().split(',');
+              return { timeperiod, invention };
+            })
+            this.setState({ words });
+          })
+      }
+      render() {
+        const { words } = this.state;
+        return html`<article><h1>Which came first ?</h1>
+        <ol>
+            <li id="invention-a"></li>
+            <li id="invention-b"></li>
+        </ol>
+ 
+ 
+      ${
+          words ? html`<${WordGuesser} words=${words} />` : html`<h3>Loading...</h3>`
+          }</article>`;
+      }
+    }
+
+    render(html`<${App} name="World" />`, document.getElementById('main'));
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style type="text/css">
+li {
+    cursor: pointer;
+    background: lightblue;
+    border: thin outline black;
+    padding: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin: 1rem;
+}
+li.correct {
+    background: mediumspringgreen;
+}
+li.wrong {
+    background: indianred;
+}
+button {
+    padding: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+</style>
+
+</head>
+<body>
+<h2>Which came first?</h2>
+<ol>
+    <li id="invention-a"></li>
+    <li id="invention-b"></li>
+</ol>
+<button type="button" onClick="choose()">Next &rarr;</button>
+<p id="score"></p>
+<script>
+let inventions = [
+ ];
+
+const a = document.getElementById('invention-a');
+const b = document.getElementById('invention-b');
+
+    function choose() {
+        a.classList.remove('wrong');
+        a.classList.remove('correct');
+        b.classList.remove('wrong');
+        b.classList.remove('correct');
+        const i = Math.floor(Math.random() * inventions.length);
+        let j = Math.floor(Math.random() * inventions.length);
+        while (j == i) {
+            j = Math.floor(Math.random() * inventions.length);
+        }
+        a.innerHTML = inventions[i][1];
+        a.setAttribute('data-index', i);
+        b.innerHTML = inventions[j][1];
+        b.setAttribute('data-index', j);
+    }
+
+a.addEventListener('click', solve);
+b.addEventListener('click', solve);
+
+let score = 0;
+let total = 0;
+
+function solve(event) {
+    if (a.classList.contains("correct") || a.classList.contains("wrong")) return;
+    if (b.classList.contains("correct") || b.classList.contains("wrong")) return;
+    total++;
+    const i = parseInt(a.getAttribute('data-index'));
+    const j = parseInt(b.getAttribute('data-index'));
+    a.innerHTML += ` (${inventions[i][0]})`;
+    b.innerHTML += ` (${inventions[j][0]})`;
+    let correct = (i <= j && event.currentTarget == a) || (i >= j && event.currentTarget == b);
+    if (inventions[i][0] == inventions[j][0]) {
+        correct = true;
+    }
+    if (correct) {
+        score++;
+        event.currentTarget.classList.add('correct');
+    } else {
+        event.currentTarget.classList.add('wrong');
+    }
+    document.getElementById('score').innerHTML = `Score: ${score}/${total}`;
+}
+
+choose();
+</script>
+</body>
+</html>
