@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        p.serif {
+            font-family: "Times New Roman", Times, serif;
+        }
+
+        p.sansserif {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        div.row {
+            width: 1400px;
+            overflow: hidden;
+        }
+
+        div.u {
+            float: left;
+            text-align: center;
+            width: 100px;
+            padding: 1em 0;
+            border-radius: 0.5em;
+        }
+
+        div.u:hover {
+            background-color: #f0f0f0;
+        }
+
+        tt {
+            color: #404040;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        div.u tt {
+            display: block;
+        }
+
+        div.u span {
+            font-size: 1.5em;
+            height: 22px;
+            display: block;
+            font-family: arial, helvetica, sans-serif;
+        }
+
+        table.unicode {
+            xfont-size: 9pt;
+            border-collapse: collapse;
+            margin: 10px;
+        }
+
+        table.unicode td {
+            vertical-align: middle;
+            padding: 1px 0;
+        }
+
+        table.unicode td.space {
+            padding: 1px 10px;
+        }
+
+        div.utop form {
+            padding-top: 2px;
+            float: right;
+        }
+
+        div.utop h1 {
+            padding: 2px 0p;
+        }
+
+        div.ubottom {
+            border-top: 1px solid #e0e0e0;
+        }
+
+        div.ubottom form {
+            padding-top: 2px;
+            float: right;
+        }
+    </style>
+</head>
+
+<body>
+
+    <body>
+        <main id="main"></main>
+        <script type="module">
+            import { h, Component, render, createRef } from 'https://unpkg.com/preact@10.4.7?module';
+            import htm from 'https://unpkg.com/htm@3.0.4?module';
+            const html = htm.bind(h);
+
+            class Alphabets extends Component {
+                constructor() {
+                    super();
+                    this.input = createRef();
+                }
+                componentWillMount() {
+                    this.next();
+                }
+                next() {
+                    const { alphabets } = this.props;
+                    this.setState({ alphabets });
+
+                }
+
+                render() {
+                    const { alphabets } = this.props;
+                    return html`
+            <section>
+                <h3>  ${alphabets[0].alphabet} </h3>
+                <h3>  ${alphabets[1].alphabet} </h3>
+                <h3>  ${alphabets[2].alphabet} </h3>
+                <h3>  ${alphabets[3].alphabet} </h3>
+                <h3>  ${alphabets[4].alphabet} </h3>
+                <h3>  ${alphabets[5].alphabet} </h3>
+                <h3>  ${alphabets[6].alphabet} </h3>
+                <h3>  ${alphabets[7].alphabet} </h3>
+                <h3>  ${alphabets[8].alphabet} </h3>
+                <h3>  ${alphabets[9].alphabet} </h3>
+                <h3>  ${alphabets[10].alphabet} </h3>
+                <h3>  ${alphabets[11].alphabet} </h3>
+                <h3>  ${alphabets[12].alphabet} </h3>
+                <h3>  ${alphabets[13].alphabet} </h3>
+                <h3>  ${alphabets[14].alphabet} </h3>
+                <h3>  ${alphabets[15].alphabet} </h3>
+                <h3>  ${alphabets[16].alphabet} </h3>
+                <h3>  ${alphabets[17].alphabet} </h3>
+                <h3>  ${alphabets[18].alphabet} </h3>
+                 </section>
+          `;
+                }
+            }
+
+            class App extends Component {
+                componentDidMount() {
+                    fetch('alphabets.txt').then(res => res.text())
+                        .then(txt => {
+                            const alphabets = txt.split('\n').filter(l => l).map(line => {
+                                const alphabet = line;
+                                return { alphabet };
+                            })
+                            this.setState({ alphabets });
+                        })
+                }
+                render() {
+                    const { alphabets } = this.state;
+                    return html`<article><h1>Tamil Alphabets</h1>${
+                        alphabets ? html`<${Alphabets} alphabets=${alphabets} />` : html`<h3>Loading...</h3>`
+                        }</article>`;
+                }
+            }
+
+            render(html`<${App} name="World" />`, document.getElementById('main'));
+        </script>
+    </body>
+
+</html>
